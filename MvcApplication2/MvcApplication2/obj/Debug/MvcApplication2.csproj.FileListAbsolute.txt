@@ -1,0 +1,14 @@
+C:\Users\Bryan\Documents\Visual Studio 2010\Projects\MvcApplication2\MvcApplication2\bin\MvcApplication2.dll
+C:\Users\Bryan\Documents\Visual Studio 2010\Projects\MvcApplication2\MvcApplication2\bin\MvcApplication2.pdb
+C:\Users\Bryan\Documents\Visual Studio 2010\Projects\MvcApplication2\MvcApplication2\bin\EntityFramework.dll
+C:\Users\Bryan\Documents\Visual Studio 2010\Projects\MvcApplication2\MvcApplication2\bin\EntityFramework.xml
+C:\Users\Bryan\Documents\Visual Studio 2010\Projects\MvcApplication2\MvcApplication2\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Bryan\Documents\Visual Studio 2010\Projects\MvcApplication2\MvcApplication2\obj\Debug\MvcApplication2.dll
+C:\Users\Bryan\Documents\Visual Studio 2010\Projects\MvcApplication2\MvcApplication2\obj\Debug\MvcApplication2.pdb
+C:\dev\projects\Hangman\MvcApplication2\MvcApplication2\bin\MvcApplication2.dll
+C:\dev\projects\Hangman\MvcApplication2\MvcApplication2\bin\MvcApplication2.pdb
+C:\dev\projects\Hangman\MvcApplication2\MvcApplication2\bin\EntityFramework.dll
+C:\dev\projects\Hangman\MvcApplication2\MvcApplication2\bin\EntityFramework.xml
+C:\dev\projects\Hangman\MvcApplication2\MvcApplication2\obj\Debug\ResolveAssemblyReference.cache
+C:\dev\projects\Hangman\MvcApplication2\MvcApplication2\obj\Debug\MvcApplication2.dll
+C:\dev\projects\Hangman\MvcApplication2\MvcApplication2\obj\Debug\MvcApplication2.pdb

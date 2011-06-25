@@ -1,0 +1,7 @@
+C:\dev\projects\Hangman\MvcApplication2\MvcApplication2\bin\Hangman.dll
+C:\dev\projects\Hangman\MvcApplication2\MvcApplication2\bin\Hangman.pdb
+C:\dev\projects\Hangman\MvcApplication2\MvcApplication2\bin\EntityFramework.dll
+C:\dev\projects\Hangman\MvcApplication2\MvcApplication2\bin\EntityFramework.xml
+C:\dev\projects\Hangman\MvcApplication2\MvcApplication2\obj\Debug\ResolveAssemblyReference.cache
+C:\dev\projects\Hangman\MvcApplication2\MvcApplication2\obj\Debug\Hangman.dll
+C:\dev\projects\Hangman\MvcApplication2\MvcApplication2\obj\Debug\Hangman.pdb

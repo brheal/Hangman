@@ -1,0 +1,243 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<style>
+    .letterGroup
+    {
+        clear: both;
+        font-family: Sans-Serif;
+        font-size: 24px;
+        padding: 2px 2px 0px 2px;
+    }
+    .letter
+    {
+        color: Black;
+        width: 35px;
+        float: left;
+        cursor: pointer;
+        text-align: center;
+        margin: 
+    }
+    .strike
+    {
+        text-decoration: line-through;
+        opacity: 0.2;
+    }
+</style>
+<script src="@Url.Content("~/Scripts/jquery-1.5.1-vsdoc.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Content/words.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    var word; //the word to guess
+    var wordCorrect; //array to hold correct letters guessed
+    var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    var canvas1; 
+    var canvas2;
+    var letterDiv;
+    var ctx1; //2d context object for canvas1 (layer1)
+    var ctx2; //2d context object for canvas2 (layer2)
+    var guesses; //holds current count of guesses
+    var MAX_GUESSES = 7; //set the max number of guesses player gets
+    var gameOver;
+    var GAMEOVER_MESSAGE = "Get ready to play again!";
+    var intervalNum; 
+    var countdown;
+    var COUNTDOWN_TOTAL = 6; //seconds to wait between games
+
+    //position of silly face
+    var facePosX = 200; 
+    var facePosY = 150;
+
+    function init() {
+
+        gameOver = false;
+        guesses = 0;
+        countdown = COUNTDOWN_TOTAL;
+
+        canvas1 = $("#layer1")[0];
+        canvas2 = $("#layer2")[0];
+        ctx1 = canvas1.getContext("2d");
+        ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
+        ctx1.font = "bold 24px sans-serif";
+
+        ctx2 = canvas2.getContext("2d");
+        ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+        ctx2.font = "bold 24px sans-serif";
+
+        letterDiv = $("#layer3");
+
+        word = words[Math.floor(Math.random() * words.length - 1)].toUpperCase();
+        wordCorrect = new Array();
+        for (var x = 0; x < word.length; x++) {
+            wordCorrect.push("");
+        }
+
+        updateWord();
+
+        //add letters
+        var group = $("#group1", letterDiv);
+        group.find("div").remove();
+        for (var j = 0; j < alphabet.length; j++) {
+            group.append($("<div/>", { 'class': "letter", 'text': alphabet[j] }));
+            if (j == 12) {
+                group = $("#group2", letterDiv);
+                group.find("div").remove();
+            }
+        }
+
+        $(".letter").click(guessLetter);
+
+        //draw starting face
+        drawFace(0);
+        
+        updateGameStatus();
+
+    }
+
+    function drawFace(guessNumber) {
+        var face = $("#face" + (guessNumber+1))[0];
+        if ( face != undefined) {
+            ctx1.clearRect(facePosX, facePosY, 75, 75);
+            ctx1.drawImage(face, facePosX, facePosY);
+        }
+    }
+
+    function updateGameStatus() {
+        //check for loser/winner
+        var message = "";
+        var style = "";
+        if (guesses >= MAX_GUESSES) { //loser
+            gameOver = true;
+            showAnswer();
+            style = "red";
+            message = "Sorry, you lost.";
+        } else if (wordCorrect.indexOf("") == -1) { //winner
+            gameOver = true;
+            style = "green";
+            message = "Woohoo, you won!";
+        }
+
+        if (gameOver) {
+            ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
+            ctx1.fillStyle = style;
+            ctx1.fillText(message, 30, 150);
+
+            ctx1.fillStyle = "black";
+            ctx1.fillText(GAMEOVER_MESSAGE, 30, 200);
+            ctx1.fillText("A new game will begin in " , 30, 250);
+
+            intervalNum = setInterval(waitForIt, 1000);
+
+            return;
+        }
+
+        //update guesses text
+        ctx1.fillStyle = "black";
+        var message = "";
+        if (guesses == MAX_GUESSES) {
+            message = GAMEOVER_MESSAGE;
+        } else {
+            message = (MAX_GUESSES - guesses).toString() + " guess" + ((MAX_GUESSES - guesses) != 1 ? "es" : "") + " left!";
+        }
+        ctx1.clearRect(150, 100, 170, 25);
+        ctx1.fillText(message, 150, 120);
+
+    }
+
+    function updateWord() {
+
+        var wordPosX = 20;
+        var wordPosY = 60;
+        var wordLineLength = 30;
+        var wordLineSpacer = 10;
+        for (var i = 0; i < word.length; i++) {
+            ctx2.strokeStyle = "black";
+            ctx2.beginPath();
+            ctx2.moveTo(wordPosX, wordPosY);
+            ctx2.lineTo(wordPosX + wordLineLength, wordPosY);
+            ctx2.stroke();
+            ctx2.closePath();
+
+            //fill in letter if already guessed correctly
+            if (wordCorrect[i] != "") {
+                ctx2.fillText(word[i], wordPosX + 7, wordPosY - 5);
+            }
+
+            wordPosX = wordPosX + wordLineLength + wordLineSpacer;
+        }
+    }
+
+    function showAnswer() {
+        for (var i = 0; i < word.length; i++) {
+            wordCorrect[i] = word[i];
+        }
+        updateWord();
+    }
+
+    function guessLetter() {
+        if (gameOver || $(this).hasClass("strike")) { 
+            return;
+        }
+
+        var noMatch = true;
+        $(this).addClass("strike").attr("enabled",false);
+        for (var i = 0; i < word.length; i++) {
+            if ($(this)[0].innerHTML == word[i]) {
+                wordCorrect[i] = $(this)[0].innerHTML;
+                noMatch = false;
+            }
+        }
+        if (noMatch) {
+            guesses++;
+        }
+
+        updateWord();
+        updateGameStatus();
+
+        if (noMatch && !gameOver) {
+            drawFace(guesses);
+        }
+    }
+
+    function waitForIt() {
+        countdown--;
+
+        ctx1.clearRect(330, 220, 50, 50);
+        ctx1.fillStyle = "blue";
+        ctx1.fillText(countdown.toString(), 330, 250);
+
+        if (countdown == 0) {
+            clearInterval(intervalNum);
+            init();
+        }
+    }
+
+    $(document).ready(function () {
+        init();
+    });
+</script>
+<div style="height:380px;">
+<div style="position: relative;">
+    <canvas id="layer1" width="460" height="400" style="position: absolute; left: 0px;
+        top: 0px; z-index: 0;">
+    </canvas>
+    <canvas id="layer2" width="460" height="100" style="position: absolute; left: 0px;
+        top: 0px; z-index: 1;">
+    </canvas>
+    <div id="layer3" style="width: 460px; height: 100px; position: absolute; left: 0px;
+        top: 300px; z-index: 2;">
+        <div id="group1" class="letterGroup">
+        </div>
+        <div id="group2" class="letterGroup">
+        </div>
+    </div>
+</div>
+</div>
+<div style="display:none;">
+    <img id="face1" src="@Url.Content("~/Content/face1.png")" alt="1" title="1"/>
+    <img id="face2" src="@Url.Content("~/Content/face2.png")" alt="2" title="2"/>
+    <img id="face3" src="@Url.Content("~/Content/face3.png")" alt="3" title="3"/>
+    <img id="face4" src="@Url.Content("~/Content/face4.png")" alt="4" title="4"/>
+    <img id="face5" src="@Url.Content("~/Content/face5.png")" alt="5" title="5"/>
+    <img id="face6" src="@Url.Content("~/Content/face6.png")" alt="6" title="6"/>
+    <img id="face7" src="@Url.Content("~/Content/face7.png")" alt="7" title="7"/>
+</div>
